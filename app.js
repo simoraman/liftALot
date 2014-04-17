@@ -1,5 +1,7 @@
-var restify = require('restify')
-  , userSave = require('save')('user');
+var restify = require('restify');
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/workout');
 var server = restify.createServer({ name: 'lift-alot-api' });
 
 server.listen(3000, function () {
@@ -8,7 +10,11 @@ server.listen(3000, function () {
 
 server
   .use(restify.fullResponse())
-  .use(restify.bodyParser());
+  .use(restify.bodyParser())
+  .use(function(req,res,next){
+    req.db = db;
+    next();
+  });
 
 server.get('/', restify.serveStatic({
   directory: './public',
@@ -16,8 +22,15 @@ server.get('/', restify.serveStatic({
   maxAge:0
 }));
 
-server.get('/user', function (req, res, next) {
-  userSave.find({}, function (error, users) {
-    res.send(users);
+server.get('/workout', function (req, res, next) {
+
+});
+
+server.post('/workout', function(req, res, next) {
+  var db = req.db;
+  var collection = db.get('workoutcollection');
+  collection.insert({lifts:req.body.lifts}, function(err, workout){
+    res.send(201, workout);
   });
+
 });
