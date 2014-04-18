@@ -13,7 +13,8 @@ function saveWorkout() {
   $.ajax('/workout', {
     data : JSON.stringify(postData),
     contentType : 'application/json',
-    type : 'POST'});
+    type : 'POST'
+  });
 }
 
 function addLift() {

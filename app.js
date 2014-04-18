@@ -1,7 +1,8 @@
 var restify = require('restify');
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/workout');
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/workout';
+var db = monk(mongoUri);
 var server = restify.createServer({ name: 'lift-alot-api' });
 
 server.listen(3000, function () {
