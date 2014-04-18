@@ -5,7 +5,7 @@ var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/workout';
 var db = monk(mongoUri);
 var server = restify.createServer({ name: 'lift-alot-api' });
 
-server.listen(3000, function () {
+server.listen(process.env.PORT || 3000, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
 
