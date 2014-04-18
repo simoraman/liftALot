@@ -16,12 +16,6 @@ server
     next();
   });
 
-server.get('/', restify.serveStatic({
-  directory: './public',
-  default: 'index.html',
-  maxAge:0
-}));
-
 server.get('/workout', function (req, res, next) {
 
 });
@@ -34,3 +28,9 @@ server.post('/workout', function(req, res, next) {
   });
 
 });
+
+server.get(/.*/, restify.serveStatic({
+  directory: './public',
+  default: 'index.html',
+  maxAge:0
+}));
