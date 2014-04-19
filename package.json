@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {},
+  "scripts": {
+    "test":"mocha test/api-test.js -R spec"
+  },
   "dependencies": {
     "restify": "*",
     "monk": "~0.8.1",
