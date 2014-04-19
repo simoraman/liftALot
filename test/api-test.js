@@ -4,7 +4,7 @@ var should = require('should');
 describe('Workout', function(){
   var testLifts = [{name:'squat'}, {name:'bench'}, {name:'deadlift'}];
   it('can create new', function(done){
-    request.post('http://localhost:3000/workout')
+    request.post('http://localhost:5000/workout')
       .set('Content-Type', 'application/json')
       .send({ lifts: testLifts })
       .end(function(response) {

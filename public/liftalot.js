@@ -18,6 +18,13 @@ function saveWorkout() {
 }
 
 function addLift() {
-  var value = $("#lift-selection").val();
-  $('#lift-list').append('<li>' + value + '</li>');
+  var data = {
+    name : $("#lift-selection").val()
+  };
+  var template = Hogan.compile(
+    ['<li>{{name}}',
+    '<input type=text value="3"></input> x <input type=text value="5"></input>',
+     '@ <input type=text value=""></input>',
+     '</li>'].join('\n'));
+  $('#lift-list').append(template.render(data));
 }
