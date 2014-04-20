@@ -9,21 +9,19 @@
     </head>
     <body>
         <h3>Lifts:</h3>
-        <select id="lift-selection">
-          <option value="squat">Squat</option>
-          <option value="bench">Bench</option>
-          <option value="deadlift">Deadlift</option>
-          <option value="press">Press</option>
-          <option value="clean">Clean</option>
-        </select>
-        <button id="add-lift">Add</button>
+
         <ul id="lift-list">
+          <li> <span class="name">Squat</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
+<li> <span class="name">Bench</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
+<li> <span class="name">Deadlift</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
+<li> <span class="name">Press</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
+<li> <span class="name">Clean</span> <input type="number" class="sets" value="5" min="0"></input> x <input type="number" class="reps" value="3" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
         </ul>
         <button id="save-workout">Save workout</button>
 
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.10/bacon.min.js"></script>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/hogan.js/3.0.0/hogan.js"></script>
 
         <script type="text/javascript" src="liftalot.js"></script>

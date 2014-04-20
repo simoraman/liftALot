@@ -21,7 +21,7 @@ server
 server.post('/workout', function(req, res, next) {
   var lifts = req.body.lifts;
   lifts = _.select(lifts, function(lift){
-    return lift.sets > 0;
+    return lift.sets > 0 && lift.weight > 0 && lift.reps > 0;
   });
   var db = req.db;
   var collection = db.get('workoutcollection');
