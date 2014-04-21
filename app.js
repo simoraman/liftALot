@@ -5,6 +5,9 @@ var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/workout';
 var db = monk(mongoUri);
 var server = restify.createServer({ name: 'lift-alot-api' });
 var _ = require('lodash');
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+
 server.listen(process.env.PORT || 5000, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
@@ -12,11 +15,17 @@ server.listen(process.env.PORT || 5000, function () {
 server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
+  .use(passport.initialize())
+  .use(passport.authenticate('basic', { session: false }))
   .use(function(req,res,next){
     req.db = db;
     next();
   });
 
+passport.use(new BasicStrategy(function(username, password,done){
+  if(username==='sala'&&password==='kala') return done(null, true);
+  return done(null, false);
+}));
 
 server.post('/workout', function(req, res, next) {
   var lifts = req.body.lifts;

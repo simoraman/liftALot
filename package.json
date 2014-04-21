@@ -4,14 +4,16 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start":"node app.js",
-    "test":"mocha test/api-test.js -R spec"
+    "start": "node app.js",
+    "test": "mocha test/api-test.js -R spec"
   },
   "dependencies": {
     "restify": "*",
     "monk": "~0.8.1",
     "mongodb": "~1.4.0",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "passport": "~0.2.0",
+    "passport-http": "~0.2.2"
   },
   "devDependencies": {
     "mocha": "*",

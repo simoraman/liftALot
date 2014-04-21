@@ -51,6 +51,7 @@ describe('Workout', function(){
     request.post('http://localhost:5000/workout')
       .set('Content-Type', 'application/json')
       .send(data)
+      .auth('sala', 'kala')
       .end(callback);
   }
 });
