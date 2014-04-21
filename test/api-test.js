@@ -47,6 +47,14 @@ describe('Workout', function(){
     });
   });
 
+    it('user is persisted', function(done){
+    var testLifts = [{name:'squat', reps:0, sets:3, weight:90}];
+    postWorkout({ lifts: testLifts }, function(response) {
+      response.body.user.should.eql('sala');
+      done();
+    });
+  });
+
   function postWorkout(data, callback) {
     request.post('http://localhost:5000/workout')
       .set('Content-Type', 'application/json')

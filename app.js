@@ -16,14 +16,15 @@ server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
   .use(passport.initialize())
-  .use(passport.authenticate('basic', { session: false }))
+  .use(passport.authenticate('basic', { session: false })
   .use(function(req,res,next){
     req.db = db;
     next();
   });
 
 passport.use(new BasicStrategy(function(username, password,done){
-  if(username==='sala'&&password==='kala') return done(null, true);
+  if(username==='sala'&&password==='kala') return done(null, {username:username});
+
   return done(null, false);
 }));
 
@@ -34,7 +35,7 @@ server.post('/workout', function(req, res, next) {
   });
   var db = req.db;
   var collection = db.get('workoutcollection');
-  collection.insert({lifts:lifts}, function(err, workout){
+  collection.insert({lifts:lifts, user:req.user.username}, function(err, workout){
     res.send(201, workout);
   });
 
