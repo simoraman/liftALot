@@ -16,7 +16,6 @@ server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
   .use(passport.initialize())
-  .use(passport.authenticate('basic', { session: false })
   .use(function(req,res,next){
     req.db = db;
     next();
@@ -28,7 +27,21 @@ passport.use(new BasicStrategy(function(username, password,done){
   return done(null, false);
 }));
 
-server.post('/workout', function(req, res, next) {
+//restify's serveStatic is somehow broken
+server.get('/signup', function(req, res){
+  fs = require('fs');
+  fs.readFile('./public/signup/signup.html', 'utf8', function (err, html) {
+    res.writeHead(200, {
+      'Content-Length': Buffer.byteLength(html),
+      'Content-Type': 'text/html'
+    });
+    res.write(html);
+    res.end();
+  });
+});
+
+
+server.post('/workout',passport.authenticate('basic', { session: false }), function(req, res, next) {
   var lifts = req.body.lifts;
   lifts = _.select(lifts, function(lift){
     return lift.sets > 0 && lift.weight > 0 && lift.reps > 0;
@@ -40,8 +53,7 @@ server.post('/workout', function(req, res, next) {
   });
 
 });
-
-server.get(/.*/, restify.serveStatic({
+server.get(/.*/,passport.authenticate('basic', { session: false }), restify.serveStatic({
   directory: './public',
   default: 'index.html',
   maxAge:0
