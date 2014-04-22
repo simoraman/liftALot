@@ -47,13 +47,14 @@ describe('Workout', function(){
     });
   });
 
-    it('user is persisted', function(done){
+  it('user is persisted', function(done){
     var testLifts = [{name:'squat', reps:0, sets:3, weight:90}];
     postWorkout({ lifts: testLifts }, function(response) {
       response.body.user.should.eql('sala');
       done();
     });
   });
+
 
   function postWorkout(data, callback) {
     request.post('http://localhost:5000/workout')
@@ -62,4 +63,18 @@ describe('Workout', function(){
       .auth('sala', 'kala')
       .end(callback);
   }
+});
+
+describe('User Account', function(){
+  it('can create Accounts', function(done){
+
+    request.post('http://localhost:5000/account')
+
+      .send({ username: 'testuser', password: 'cat' })
+      .end(function(response){
+        response.status.should.equal(201);
+        response.body.should.eql('testuser');
+        done();
+      });
+  });
 });

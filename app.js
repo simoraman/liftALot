@@ -53,6 +53,15 @@ server.post('/workout',passport.authenticate('basic', { session: false }), funct
   });
 
 });
+
+server.post('/account', function(req, res){
+ var db = req.db;
+  var collection = db.get('accountcollection');
+  collection.insert({user:req.body.username, password:req.body.password}, function(err, account){
+    res.send(201, account.user);
+  });
+});
+
 server.get(/.*/,passport.authenticate('basic', { session: false }), restify.serveStatic({
   directory: './public',
   default: 'index.html',
