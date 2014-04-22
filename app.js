@@ -7,7 +7,7 @@ var server = restify.createServer({ name: 'lift-alot-api' });
 var _ = require('lodash');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
-
+var bcrypt = require('bcrypt-nodejs');
 server.listen(process.env.PORT || 5000, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
@@ -21,10 +21,16 @@ server
     next();
   });
 
-passport.use(new BasicStrategy(function(username, password,done){
-  if(username==='sala'&&password==='kala') return done(null, {username:username});
+passport.use(new BasicStrategy(function(username, password, done){
+  var collection = db.get('accountcollection');
+  collection.findOne({user:username}, function(err, account){
+    if(err) return done(null, false);
+    if(bcrypt.compareSync(password, account.password)) {
+      return done(null, { username: username });
+    };
+    return done(null, false);
+  });
 
-  return done(null, false);
 }));
 
 //restify's serveStatic is somehow broken
@@ -55,9 +61,9 @@ server.post('/workout',passport.authenticate('basic', { session: false }), funct
 });
 
 server.post('/account', function(req, res){
- var db = req.db;
+  var db = req.db;
   var collection = db.get('accountcollection');
-  collection.insert({user:req.body.username, password:req.body.password}, function(err, account){
+  collection.insert({user:req.params.username, password:bcrypt.hashSync(req.params.password)}, function(err, account){
     res.send(201, account.user);
   });
 });
