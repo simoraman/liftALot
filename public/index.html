@@ -6,18 +6,92 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css">
+        <link rel="stylesheet" href="liftalot.css" type="text/css" media="screen" />
     </head>
     <body>
         <h3>Lifts:</h3>
 
         <ul id="lift-list">
-          <li> <span class="name">Squat</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
-<li> <span class="name">Bench</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
-<li> <span class="name">Deadlift</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
-<li> <span class="name">Press</span> <input type="number" class="sets" value="3" min="0"></input> x <input type="number" class="reps" value="5" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
-<li> <span class="name">Clean</span> <input type="number" class="sets" value="5" min="0"></input> x <input type="number" class="reps" value="3" min="0"></input> @ <input type="number" class="weight" min="0" value=""></input></li>
+          <li>
+            <form class="pure-form pure-form-aligned">
+              <legend class="name">Squat</legend>
+              <fieldset>
+                <label>Sets</label>
+                <div class="pure-control-group">
+                  <button class="pure-button">-</button>
+                  <input type="number" class="sets pure-u-1-8" value="3" min="0"></input>
+                  <button class="pure-button">+</button>
+                </div>
+                <label>Reps</label>
+                <div class="pure-control-group">
+                  <button class="pure-button">-</button>
+                  <input type="number" class="reps" value="5" min="0"></input>
+                  <button class="pure-button">+</button>
+                </div>
+
+                <label>Weight</label>
+                <div class="pure-control-group">
+                  <input type="number" class="weight" min="0" value=""></input>
+                </div>
+              </fieldset>
+            </form>
+          </li>
+
+          <li>
+            <form class="pure-form pure-form-stacked">
+              <legend class="name">Bench</legend>
+              <fieldset>
+                <label>Sets</label>
+                <input type="number" class="sets" value="3" min="0"></input>
+                <label>Reps</label>
+                <input type="number" class="reps" value="5" min="0"></input>
+                <label>Weight</label>
+                <input type="number" class="weight" min="0" value=""></input>
+              </fieldset>
+            </form>
+          </li>
+          <li>
+            <form class="pure-form pure-form-stacked">
+              <legend class="name">Deadlift</legend>
+              <fieldset>
+                <label>Sets</label>
+                <input type="number" class="sets" value="3" min="0"></input>
+                <label>Reps</label>
+                <input type="number" class="reps" value="5" min="0"></input>
+                <label>Weight</label>
+                <input type="number" class="weight" min="0" value=""></input>
+              </fieldset>
+            </form>
+          </li>
+          <li>
+            <form class="pure-form pure-form-stacked">
+              <legend class="name">Press</legend>
+              <fieldset>
+                <label>Sets</label>
+                <input type="number" class="sets" value="3" min="0"></input>
+                <label>Reps</label>
+                <input type="number" class="reps" value="5" min="0"></input>
+                <label>Weight</label>
+                <input type="number" class="weight" min="0" value=""></input>
+              </fieldset>
+            </form>
+          </li>
+          <li>
+            <form class="pure-form pure-form-stacked">
+              <legend class="name">Clean</legend>
+              <fieldset>
+                <label>Sets</label>
+                <input type="number" class="sets" value="3" min="0"></input>
+                <label>Reps</label>
+                <input type="number" class="reps" value="3" min="0"></input>
+                <label>Weight</label>
+                <input type="number" class="weight" min="0" value=""></input>
+              </fieldset>
+            </form>
+          </li>
         </ul>
-        <button id="save-workout">Save workout</button>
+        <button id="save-workout" class="pure-button pure-button-primary">Save workout</button>
 
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.10/bacon.min.js"></script>
