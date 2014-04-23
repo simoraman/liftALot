@@ -1,6 +1,21 @@
 $(document).ready(function(){
   $("#save-workout").asEventStream('click').onValue(saveWorkout);
+  $(".add").asEventStream('click').doAction(".preventDefault").onValue(increase);
+  $(".remove").asEventStream('click').doAction(".preventDefault").onValue(decrease);
 });
+
+function increase(event){
+  valueElement = $(event.target.parentElement).find('input');
+  value = parseInt(valueElement.val());
+  valueElement.val(value + 1);
+}
+function decrease(event){
+  valueElement = $(event.target.parentElement).find('input');
+  value = parseInt(valueElement.val());
+  if(value > 0){
+    valueElement.val(value - 1);
+  }
+}
 
 function saveWorkout() {
   var liftList = $('#lift-list li');
@@ -18,5 +33,5 @@ function saveWorkout() {
     data : JSON.stringify(postData),
     contentType : 'application/json',
     type : 'POST'
-  });
+ });
 }
