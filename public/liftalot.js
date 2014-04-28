@@ -65,5 +65,6 @@ function saveWorkout() {
     type : 'POST'
  }).done(function(){
    localStorage.clear();
+   location.reload();
  });
 }
