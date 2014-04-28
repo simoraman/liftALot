@@ -1,20 +1,26 @@
 $(document).ready(function(){
+  if(localStorage['liftData']){
+    setLiftData();
+  }
   $('#save-workout').asEventStream('click')
     .onValue(saveWorkout);
+
   $('.add').asEventStream('click')
     .doAction(".preventDefault")
-    .doAction(persistLocally)
-    .onValue(increase);
+    .doAction(increase)
+    .onValue(persistLocally);
+
   $('.remove').asEventStream('click')
     .doAction(".preventDefault")
-    .doAction(persistLocally)
-    .onValue(decrease);
+    .doAction(decrease)
+    .onValue(persistLocally);
+
   $('.weight').asEventStream('keyup')
     .debounce(500)
     .onValue(persistLocally);
 });
 
-function persistLocally(a,b){
+function persistLocally() {
   localStorage['liftData'] = JSON.stringify({lifts: getLiftData()});
 }
 
@@ -29,6 +35,16 @@ function decrease(event){
   if(value > 0){
     valueElement.val(value - 1);
   }
+}
+
+function setLiftData(){
+  var liftData = JSON.parse(localStorage['liftData']);
+  _.forEach(liftData.lifts, function(lift){
+    var $fields = $('.name:contains("' + lift.name + '")').siblings();
+    $fields.find('.sets').val(lift.sets);
+    $fields.find('.reps').val(lift.reps);
+    $fields.find('.weight').val(lift.weight);
+  });
 }
 
 function getLiftData(){
