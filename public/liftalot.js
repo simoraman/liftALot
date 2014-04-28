@@ -1,8 +1,22 @@
 $(document).ready(function(){
-  $("#save-workout").asEventStream('click').onValue(saveWorkout);
-  $(".add").asEventStream('click').doAction(".preventDefault").onValue(increase);
-  $(".remove").asEventStream('click').doAction(".preventDefault").onValue(decrease);
+  $('#save-workout').asEventStream('click')
+    .onValue(saveWorkout);
+  $('.add').asEventStream('click')
+    .doAction(".preventDefault")
+    .doAction(persistLocally)
+    .onValue(increase);
+  $('.remove').asEventStream('click')
+    .doAction(".preventDefault")
+    .doAction(persistLocally)
+    .onValue(decrease);
+  $('.weight').asEventStream('keyup')
+    .debounce(500)
+    .onValue(persistLocally);
 });
+
+function persistLocally(a,b){
+  localStorage['liftData'] = JSON.stringify({lifts: getLiftData()});
+}
 
 function increase(event){
   valueElement = $(event.target.parentElement).find('input');
@@ -17,9 +31,9 @@ function decrease(event){
   }
 }
 
-function saveWorkout() {
+function getLiftData(){
   var liftList = $('#lift-list li');
-  liftData =_.map(liftList, function(el) {
+  return _.map(liftList, function(el) {
     return {
       name : $(el).find('.name').text(),
       sets : $(el).find('.sets').val(),
@@ -27,11 +41,13 @@ function saveWorkout() {
       weight : $(el).find('.weight').val()
     };
   });
-  var postData = { lifts : liftData };
-
+}
+function saveWorkout() {
   $.ajax('/workout', {
-    data : JSON.stringify(postData),
+    data : localStorage['liftData'],
     contentType : 'application/json',
     type : 'POST'
+ }).done(function(){
+   localStorage.clear();
  });
 }
