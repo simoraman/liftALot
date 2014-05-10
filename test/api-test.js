@@ -1,7 +1,14 @@
 var request = require('superagent');
 var should = require('should');
+var server = require('../app');
 
 describe('Workout', function(){
+  before(function(){
+    server.listen(5000);
+  });
+  after(function () {
+    server.close();
+  });
 
   it('can create new', function(done){
     var testLifts = [{name:'squat', sets:1, reps:1, weight:1}, {name:'deadlift', sets:1, reps:1, weight:1}];
@@ -55,7 +62,6 @@ describe('Workout', function(){
     });
   });
 
-
   function postWorkout(data, callback) {
     request.post('http://localhost:5000/workout')
       .set('Content-Type', 'application/json')
@@ -63,9 +69,32 @@ describe('Workout', function(){
       .auth('sala', 'kala')
       .end(callback);
   }
+
+  describe('querying', function() {
+    it('can get latest workout', function(done){
+      getWorkout(function(response){
+        response.status.should.equal(200);
+        done();
+      });
+    });
+
+    function getWorkout(callback) {
+      request.get('http://localhost:5000/workout/latest')
+        //.set('Content-Type', 'application/json')
+        //.auth('sala', 'kala')
+        .end(callback);
+    }
+  });
 });
 
 describe('User Account', function(){
+  before(function(){
+    server.listen(5000);
+  });
+  after(function () {
+    server.close();
+  });
+
   it('can create Accounts', function(done){
 
     request.post('http://localhost:5000/account')
