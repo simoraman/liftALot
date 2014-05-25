@@ -72,9 +72,12 @@ describe('Workout', function(){
 
   describe('querying', function() {
     it('can get latest workout', function(done){
-      getWorkout(function(response){
-        response.status.should.equal(200);
-        done();
+      postWorkout({ lifts: [{name:'squat', reps:1, sets:4, weight:91}] }, function(response) {
+        getWorkout(function(response){
+          response.status.should.equal(200);
+          response.body[0].weight.should.equal(91);
+          done();
+        });
       });
     });
 

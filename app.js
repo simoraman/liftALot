@@ -70,7 +70,13 @@ this.server.post('/workout',passport.authenticate('basic', { session: false }), 
 });
 
 this.server.get('/workout/latest', function(req, res){
-  res.send(200);
+  //var workout = [{name:'squat', reps:1, sets:4, weight:91}];
+  var db = req.db;
+  var collection = db.get('workoutcollection');
+  collection.findOne({}, { sort : [['_id','desc']] }, function(err, document){
+    if(err){console.log(err);}
+    res.send(200, document.lifts);
+  });
 });
 
 this.server.post('/account', function(req, res){
