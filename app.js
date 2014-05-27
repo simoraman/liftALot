@@ -8,7 +8,7 @@ var _ = require('lodash');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var bcrypt = require('bcrypt-nodejs');
-
+var Bacon = require('baconjs');
 //server.listen(process.env.PORT || 5000, function () {
 //  console.log('%s listening at %s', server.name, server.url);
 //});
@@ -70,13 +70,23 @@ this.server.post('/workout',passport.authenticate('basic', { session: false }), 
 });
 
 this.server.get('/workout/latest', function(req, res){
-  //var workout = [{name:'squat', reps:1, sets:4, weight:91}];
   var db = req.db;
   var collection = db.get('workoutcollection');
-  collection.findOne({}, { sort : [['_id','desc']] }, function(err, document){
-    if(err){console.log(err);}
-    res.send(200, document.lifts);
+
+  collection.distinct('lifts.name', function(err, lifts){
+    var results = [];
+    _.forEach(lifts, function(lift){
+      var findPromise = collection.findOne({'lifts.name' : lift}, { sort : [['_id','desc']] });
+      var stream = Bacon.fromPromise(findPromise).map(function(result){
+        return _.filter(result.lifts, function(v){ return v.name===lift; });
+      });
+      results.push(stream);
+    });
+    Bacon.combineAsArray(results).onValue(function(lf){
+      res.send(200, _.flatten(lf));
+    });
   });
+
 });
 
 this.server.post('/account', function(req, res){

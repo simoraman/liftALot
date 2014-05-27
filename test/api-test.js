@@ -81,6 +81,32 @@ describe('Workout', function(){
       });
     });
 
+    it('returns latest weight for all lifts', function(done){
+      var squat = {name:'squat', reps:1, sets:4, weight:92};
+      var deadlift = {name:'deadlift', sets:1, reps:1, weight:101};
+      var bench = {name:'bench', sets:1, reps:1, weight:82};
+      var press = {name:'press', reps:1, sets:4, weight:12};
+      var clean = {name:'clean', sets:1, reps:1, weight:11};
+
+      postWorkout({ lifts: [squat, deadlift, bench ] }, function(response) {
+        postWorkout({ lifts: [press, clean ] }, function(response) {
+          getWorkout(function(response){
+            response.status.should.equal(200);
+            var lifts = response.body;
+
+            lifts.should.containEql(squat);
+            lifts.should.containEql(deadlift);
+            lifts.should.containEql(bench);
+            lifts.should.containEql(clean);
+            lifts.should.containEql(press);
+            done();
+          });
+        });
+
+      });
+    });
+
+
     function getWorkout(callback) {
       request.get('http://localhost:5000/workout/latest')
         //.set('Content-Type', 'application/json')
@@ -99,9 +125,7 @@ describe('User Account', function(){
   });
 
   it('can create Accounts', function(done){
-
     request.post('http://localhost:5000/account')
-
       .send({ username: 'testuser', password: 'cat' })
       .end(function(response){
         response.status.should.equal(201);
