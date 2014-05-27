@@ -4,7 +4,6 @@ $(document).ready(function(){
   } else{
     $.getJSON('/workout/latest', function(data){
       var lastWeights = _.forEach(data, function(lift){
-        lift.reps = 0;
         lift.sets = 0;
       });
       localStorage['liftData'] = JSON.stringify({lifts: lastWeights});
