@@ -26,6 +26,14 @@ describe('Workout', function(){
       done();
     });
   });
+  it('can have comment', function(done){
+    var comment = 'not bad';
+    var workoutData = {lifts:[{name:'squat', reps:1, sets:1, weight:1 }], comment:comment};
+    postWorkout(workoutData, function(response){
+      response.body.comment.should.equal(comment);
+      done();
+    });
+  });
 
   it('lifts with 0 sets are not persisted', function(done){
     var testLifts = [{name:'squat', reps:5, sets:0, weight:90}, {name:'squat', reps:5, sets:3, weight:90}];

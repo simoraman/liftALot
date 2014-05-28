@@ -29,17 +29,17 @@ $(document).ready(function(){
 });
 
 function persistLocally() {
-  localStorage['liftData'] = JSON.stringify({lifts: getLiftData()});
+  localStorage['liftData'] = JSON.stringify(getLiftData());
 }
 
 function increase(event){
-  valueElement = $(event.target.parentElement).find('input');
-  value = parseInt(valueElement.val());
+  var valueElement = $(event.target.parentElement).find('input');
+  var value = parseInt(valueElement.val());
   valueElement.val(value + 1);
 }
 function decrease(event){
-  valueElement = $(event.target.parentElement).find('input');
-  value = parseInt(valueElement.val());
+  var valueElement = $(event.target.parentElement).find('input');
+  var value = parseInt(valueElement.val());
   if(value > 0){
     valueElement.val(value - 1);
   }
@@ -55,15 +55,9 @@ function setLiftData(){
   });
 }
 
-function queryLiftData(){
-  $.getJSON('/workout/latest', function(data){
-
-  });
-}
-
 function getLiftData(){
   var liftList = $('#lift-list li');
-  return _.map(liftList, function(el) {
+  var lifts =  _.map(liftList, function(el) {
     return {
       name : $(el).find('.name').attr('id'),
       sets : $(el).find('.sets').val(),
@@ -71,6 +65,10 @@ function getLiftData(){
       weight : $(el).find('.weight').val()
     };
   });
+  var liftData = {};
+  liftData.lifts = lifts;
+  liftData.comment = $('#comment').val();
+  return liftData;
 }
 function saveWorkout() {
   $.ajax('/workout', {

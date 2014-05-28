@@ -63,7 +63,7 @@ this.server.post('/workout',passport.authenticate('basic', { session: false }), 
   });
   var db = req.db;
   var collection = db.get('workoutcollection');
-  collection.insert({lifts:lifts, user:req.user.username}, function(err, workout){
+  collection.insert({lifts:lifts, comment:req.body.comment, user:req.user.username}, function(err, workout){
     res.send(201, workout);
   });
 
