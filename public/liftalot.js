@@ -1,15 +1,20 @@
 $(document).ready(function(){
+
   if(localStorage['liftData']){
-    setLiftData();
+    var liftData = JSON.parse(localStorage['liftData']);
+    setLiftData(liftData);
   } else{
     $.getJSON('/workout/latest', function(data){
       var lastWeights = _.forEach(data, function(lift){
         lift.sets = 0;
+        lift.comment='';
       });
-      localStorage['liftData'] = JSON.stringify({lifts: lastWeights});
-      setLiftData();
+      var liftData = {lifts: lastWeights};
+      localStorage['liftData'] = JSON.stringify(liftData);
+      setLiftData(liftData);
     });
   };
+
   $('#save-workout').asEventStream('click')
     .onValue(saveWorkout);
 
@@ -24,6 +29,14 @@ $(document).ready(function(){
     .onValue(persistLocally);
 
   $('.weight').asEventStream('keyup')
+    .debounce(500)
+    .onValue(persistLocally);
+
+  $('.weight').asEventStream('change')
+    .debounce(500)
+    .onValue(persistLocally);
+
+  $('#comment').asEventStream('keyup')
     .debounce(500)
     .onValue(persistLocally);
 });
@@ -45,14 +58,14 @@ function decrease(event){
   }
 }
 
-function setLiftData(){
-  var liftData = JSON.parse(localStorage['liftData']);
+function setLiftData(liftData){
   _.forEach(liftData.lifts, function(lift){
     var $fields = $('#' + lift.name).siblings();
     $fields.find('.sets').val(lift.sets);
     $fields.find('.reps').val(lift.reps);
     $fields.find('.weight').val(lift.weight);
   });
+  $('#comment').val(liftData.comment);
 }
 
 function getLiftData(){
