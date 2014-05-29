@@ -9,9 +9,6 @@ var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var bcrypt = require('bcrypt-nodejs');
 var Bacon = require('baconjs');
-//server.listen(process.env.PORT || 5000, function () {
-//  console.log('%s listening at %s', server.name, server.url);
-//});
 
 exports.listen = function () {
   this.server.listen.apply(this.server, arguments);
