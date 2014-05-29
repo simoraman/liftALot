@@ -1,4 +1,8 @@
 $(document).ready(function(){
+  var liftNames = ['clean', 'press', 'deadlift', 'bench', 'squat'];
+  _.forEach(liftNames, function(liftName){
+    $('#lift-list').prepend(createLiftView(liftName));
+  });
 
   if(localStorage['liftData']){
     var liftData = JSON.parse(localStorage['liftData']);
@@ -92,4 +96,32 @@ function saveWorkout() {
    localStorage.clear();
    location.reload();
  });
+}
+function createLiftView(lift){
+  var templateStr = [
+  '<li>',
+   '<form class="pure-form pure-form-aligned">',
+    '<legend class="name" id="{{lift}}">{{liftTitle}}</legend>',
+     '<fieldset>',
+      '<label>Sets</label>',
+      '<div class="pure-control-group pure-g">',
+       '<button class="remove pure-button">-</button>',
+       '<input type="number" class="sets pure-u-1-5" value="0" min="0"></input>',
+       '<button class="add pure-button">+</button>',
+      '</div>',
+      '<label>Reps</label>',
+      '<div class="pure-control-group pure-g">',
+       '<button class="remove pure-button">-</button>',
+       '<input type="number" class="reps pure-u-1-5" value="5" min="0"></input>',
+       '<button class="add pure-button">+</button>',
+      '</div>',
+      '<label>Weight</label>',
+      '<div class="pure-control-group pure-g">',
+       '<input type="number" class="weight pure-u-1-5" step="0.5" min="0" value=""></input>',
+      '</div>',
+     '</fieldset>',
+    '</form>',
+  '</li>'].join('');
+  var template = Hogan.compile(templateStr);
+  return template.render({lift:lift, liftTitle:lift.charAt(0).toUpperCase() + lift.slice(1)});
 }
