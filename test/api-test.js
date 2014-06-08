@@ -114,6 +114,19 @@ describe('Workout', function(){
       });
     });
 
+    it('can get list of workouts', function(done){
+      request.get('http://localhost:5000/workout')
+        .set('Content-Type', 'application/json')
+        .auth('sala', 'kala')
+        .end(test);
+
+      function test(response){
+        response.status.should.equal(200);
+        response.body.length.should.be.above(0);
+        done();
+      }
+    });
+
 
     function getWorkout(callback) {
       request.get('http://localhost:5000/workout/latest')

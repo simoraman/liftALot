@@ -66,6 +66,17 @@ this.server.post('/workout',passport.authenticate('basic', { session: false }), 
 
 });
 
+this.server.get('/workout', passport.authenticate('basic', { session: false }), function(req, res) {
+  var db = req.db;
+  var collection = db.get('workoutcollection');
+
+  collection.find({}, function(err, result){
+    res.send(200, result);
+  });
+
+
+});
+
 this.server.get('/workout/latest', function(req, res){
   var db = req.db;
   var collection = db.get('workoutcollection');
