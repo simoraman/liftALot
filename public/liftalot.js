@@ -1,49 +1,107 @@
 $(document).ready(function(){
-  var liftNames = ['clean', 'press', 'deadlift', 'bench', 'squat'];
-  _.forEach(liftNames, function(liftName){
-    $('#lift-list').prepend(createLiftView(liftName));
-  });
+  var router = window.router();
+  window.addEventListener('hashchange', router.route);
+  router.route();
+});
 
-  if(localStorage['liftData']){
-    var liftData = JSON.parse(localStorage['liftData']);
-    setLiftData(liftData);
-  } else{
-    $.getJSON('/workout/latest', function(data){
-      var lastWeights = _.forEach(data, function(lift){
-        lift.sets = 0;
-        lift.comment='';
+function router() {
+  var route = function () {
+    switch (window.location.hash) {
+    case '#!/workouts':
+      workoutsView().render();
+      break;
+    default:
+      mainView().render();
+      break;
+    }
+  };
+  return { route: route };
+}
+var workoutsView = function(){
+  var render = function(){
+    Bacon.fromPromise($.getJSON('/workout')).onValue(function(value){
+      $('.content').empty();
+      var templateStr = ['<div id="{{_id}}" class="workout">'
+                         ,'<h3>{{date}}</h3>'
+                         ,'</div>'].join('');
+      var template = Hogan.compile(templateStr);
+      _.each(value, function(item){
+        $('.content').append(template.render(item));
+        createWorkoutView(item, $('#' + item._id));
       });
-      var liftData = {lifts: lastWeights};
-      localStorage['liftData'] = JSON.stringify(liftData);
-      setLiftData(liftData);
     });
   };
+  var createWorkoutView = function(workout, parentElement){
+    var templateStr = ['<div class="lift">',
+                       '{{lift.name}} ',
+                       '{{lift.sets}} x {{lift.reps}} @ {{lift.weight}}',
+                      '</div>'].join('');
+    var template = Hogan.compile(templateStr);
+    _.each(workout.lifts, function(lift){
+      parentElement.append(template.render({lift: lift}));
+    });
+  };
+  return { render: render };
+};
 
-  $('#save-workout').asEventStream('click')
-    .onValue(saveWorkout);
+var mainView = function(){
+  var render = function() {
+    var mainHtml = ['<h3>Lifts:</h3>'
+                    ,'<ul id="lift-list">'
+                    ,'<li><legend>Comment</legend>'
+                    ,'<div class="pure-control-group pure-g">'
+                    ,'<textarea name="comment" id="comment" rows="5" cols="50"></textarea>'
+                    ,'</div></li></ul>'
+                    ,'<button id="save-workout" class="pure-button pure-button-primary">Save workout</button>'].join('');
+    $('.content').html(mainHtml);
+    var liftNames = ['clean', 'press', 'deadlift', 'bench', 'squat'];
+    _.forEach(liftNames, function(liftName){
+      $('#lift-list').prepend(createLiftView(liftName));
+    });
 
-  $('.add').asEventStream('click')
-    .doAction(".preventDefault")
-    .doAction(increase)
-    .onValue(persistLocally);
+    if(localStorage['liftData']){
+      var liftData = JSON.parse(localStorage['liftData']);
+      setLiftData(liftData);
+    } else{
+      $.getJSON('/workout/latest', function(data){
+        var lastWeights = _.forEach(data, function(lift){
+          lift.sets = 0;
+          lift.comment='';
+        });
+        var liftData = {lifts: lastWeights};
+        localStorage['liftData'] = JSON.stringify(liftData);
+        setLiftData(liftData);
+      });
+    };
 
-  $('.remove').asEventStream('click')
-    .doAction(".preventDefault")
-    .doAction(decrease)
-    .onValue(persistLocally);
+    $('#save-workout').asEventStream('click')
+      .onValue(saveWorkout);
 
-  $('.weight').asEventStream('keyup')
-    .debounce(500)
-    .onValue(persistLocally);
+    $('.add').asEventStream('click')
+      .doAction(".preventDefault")
+      .doAction(increase)
+      .onValue(persistLocally);
 
-  $('.weight').asEventStream('change')
-    .debounce(500)
-    .onValue(persistLocally);
+    $('.remove').asEventStream('click')
+      .doAction(".preventDefault")
+      .doAction(decrease)
+      .onValue(persistLocally);
 
-  $('#comment').asEventStream('keyup')
-    .debounce(500)
-    .onValue(persistLocally);
-});
+    $('.weight').asEventStream('keyup')
+      .debounce(500)
+      .onValue(persistLocally);
+
+    $('.weight').asEventStream('change')
+      .debounce(500)
+      .onValue(persistLocally);
+
+    $('#comment').asEventStream('keyup')
+      .debounce(500)
+      .onValue(persistLocally);
+
+  };
+  return{ render: render };
+};
 
 function persistLocally() {
   localStorage['liftData'] = JSON.stringify(getLiftData());

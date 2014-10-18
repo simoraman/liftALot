@@ -9,3 +9,13 @@
 #lift-list button{
 
 }
+
+.content{
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+.workout {
+    margin: 5px;
+    padding: 10px;
+    border:dotted;
+}

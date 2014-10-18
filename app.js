@@ -36,7 +36,6 @@ passport.use(new BasicStrategy(function(username, password, done){
     };
     return done(null, false);
   });
-
 }));
 
 //restify's serveStatic is somehow broken
@@ -52,7 +51,6 @@ this.server.get('/signup', function(req, res){
   });
 });
 
-
 this.server.post('/workout',passport.authenticate('basic', { session: false }), function(req, res, next) {
   var lifts = req.body.lifts;
   lifts = _.select(lifts, function(lift){
@@ -63,18 +61,14 @@ this.server.post('/workout',passport.authenticate('basic', { session: false }), 
   collection.insert({lifts:lifts, comment:req.body.comment, user:req.user.username}, function(err, workout){
     res.send(201, workout);
   });
-
 });
 
 this.server.get('/workout', passport.authenticate('basic', { session: false }), function(req, res) {
   var db = req.db;
   var collection = db.get('workoutcollection');
-
   collection.find({}, function(err, result){
     res.send(200, result);
   });
-
-
 });
 
 this.server.get('/workout/latest', function(req, res){
