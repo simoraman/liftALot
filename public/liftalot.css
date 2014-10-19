@@ -6,10 +6,17 @@
     list-style:none;
 }
 
-#lift-list button{
-
+#lift-list form{
+    max-width: 400px;
 }
-
+#lift-list form input{
+    text-align: center;
+}
+#lift-list form div{
+    font-size: larger;
+}
+.add{ margin-left: 5px;}
+.remove{ margin-right: 5px;}
 .content{
     margin-bottom: 20px;
     margin-left: 10px;
