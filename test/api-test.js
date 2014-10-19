@@ -1,12 +1,18 @@
 var request = require('superagent');
 var should = require('should');
 var server = require('../app');
+var mongo = require('mongodb');
+var monk = require('monk');
+var mongoUri = 'mongodb://localhost:27017/workout';
+var db = monk(mongoUri);
 
 describe('Workout', function(){
   before(function(){
     server.listen(5000);
   });
   after(function () {
+    var collection = db.get('workoutcollection');
+    collection.remove({}, function(){});
     server.close();
   });
 

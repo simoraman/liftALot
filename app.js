@@ -58,7 +58,7 @@ this.server.post('/workout',passport.authenticate('basic', { session: false }), 
   });
   var db = req.db;
   var collection = db.get('workoutcollection');
-  collection.insert({lifts:lifts, comment:req.body.comment, user:req.user.username}, function(err, workout){
+  collection.insert({lifts:lifts, comment:req.body.comment, user:req.user.username, date: new Date()}, function(err, workout){
     res.send(201, workout);
   });
 });
@@ -78,7 +78,7 @@ this.server.get('/workout/latest', function(req, res){
   collection.distinct('lifts.name', function(err, lifts){
     var results = [];
     _.forEach(lifts, function(lift){
-      var findPromise = collection.findOne({'lifts.name' : lift}, { sort : [['_id','desc']] });
+      var findPromise = collection.findOne({'lifts.name' : lift}, { sort : [['date','desc']] });
       var stream = Bacon.fromPromise(findPromise).map(function(result){
         return _.filter(result.lifts, function(v){ return v.name===lift; });
       });
